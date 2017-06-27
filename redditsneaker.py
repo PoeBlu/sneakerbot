@@ -12,47 +12,27 @@ from config import size, fname, lname, street, zipcode, city, state_code, phone,
 #put url of shoes
 url = 'http://www.footlocker.com/product/model:98963/sku:24300657/nike-air-force-1-low-mens/all-white/white/?cm='
 
-
-###Do not change anything below this line
-#shoe sizes
-size6 = '//*[@id="product_sizes"]/option[1]'
-size65 = '//*[@id="product_sizes"]/option[2]'
-size7 = '//*[@id="product_sizes"]/option[3]'
-size75 = '//*[@id="product_sizes"]/option[4]'
-size8 = '//*[@id="product_sizes"]/option[5]'
-size85 = '//*[@id="product_sizes"]/option[6]'
-size9 = '//*[@id="product_sizes"]/option[7]'
-size95 = '//*[@id="product_sizes"]/option[8]'
-size10 = '/*[@id="size_selection_list"]'
-size105 = '//*[@id="product_sizes"]/option[10]'
-size11 = '//*[@id="product_sizes"]/option[11]'
-size115 = '//*[@id="product_sizes"]/option[12]'
-size12 = '//*[@id="product_sizes"]/option[13]'
-size125 = '//*[@id="product_sizes"]/option[14]'
-
-chosen_size = size10
-
 cart_url = 'http://www.footlocker.com/shoppingcart/default.cfm?sku='
 shipping_info_loaded = False
 credit_info_loaded = False
 successful_load = False
 
 browser = webdriver.Firefox()
+size_formatted = str(size).zfill(2)
 print('Loading page...')
 while successful_load == False:
     browser.get(url)
-    print('Successful!')
+
     #size
     print('Selecting size...')
-    print(chosen_size)
     (browser.find_element_by_id('pdp_size_select_mask')).click()
-    elem = browser.find_element_by_xpath("//span[@id='size_selection_list']/a[@data-modelsize='08_0']")
-    print(elem.get_attribute('outerHTML'))
+    size_select_path = "//span[@id='size_selection_list']/a[@data-modelsize='" + size_formatted +"_0']"
+    elem = browser.find_element_by_xpath(size_select_path)
     elem.click()
     print('Successful!')
+
     #add to cart
     print('Adding to cart...')
-
     add_to_cart = browser.find_element_by_id('pdp_addtocart_button')
     add_to_cart.click()
     print('Successful!')
@@ -65,7 +45,6 @@ while successful_load == False:
         print('Successful!')
         print('Going to billing...')
         successful_load = True
-        checkout.click()
     
 #waits for page to load
 
@@ -117,7 +96,7 @@ if shipping_info_loaded == True:
         print('Page took too long to load')
         
 try:
-    element = WebDriverWait(browser, 300).until(EC.presence_of_element_located((By.XPATH, '//*[@id="payMethodPanestoredCCCardNumber"]')))
+    element = WebDriverWait(browser, 300).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="payMethodPanestoredCCCardNumber"]')))
     print('Page loaded')
     credit_info_loaded = True
 except TimeoutException:
@@ -138,3 +117,15 @@ if credit_info_loaded == True:
     credit_card_number_csv.send_keys(cccsv)
     credit_card_number_csv.submit()
     print('Successful')
+    continueButton = browser.find_element_by_xpath('//*[@id="payMethodPaneContinue"]')
+    continueButton.click()
+
+    try:
+        element = WebDriverWait(browser, 300).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="orderSubmit"]')))
+        print('Submitting order')
+        submit = browser.find_element_by_xpath('//*[@id="orderSubmit"]')
+        submit.click()
+        print('Order submitted. All done!')
+    except TimeoutException:
+        print('Page took too long to load')
+
