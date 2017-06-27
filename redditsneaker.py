@@ -4,25 +4,13 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
+from config import size, fname, lname, street, zipcode, city, state_code, phone, email, ccnumber, ccmonth, ccyear, cccsv
 
 #current bugs
 #sometimes fails to add shoe to cart, when this happens restart the script
 
 #put url of shoes
 url = 'http://www.footlocker.com/product/model:98963/sku:24300657/nike-air-force-1-low-mens/all-white/white/?cm='
-
-#personal information
-fname = 'Alex'
-lname = 'Fend'
-street2 = '462 E. Grove St.'
-zipcode2 = '91767'
-city2 = 'Pomona'
-phone2 = '9095308362'
-email2 = 'thisisjohns2mail3@gmail.com'
-creditcardnumber = '4266841424986345'
-creditcardmonth = '10'
-creditcardyear = '18'
-credticardcsv = '222'
 
 
 ###Do not change anything below this line
@@ -95,19 +83,19 @@ if shipping_info_loaded == True:
     first_name.send_keys(fname)
     last_name = browser.find_element_by_xpath('//*[@id="billLastName"]')
     last_name.send_keys(lname)
-    street = browser.find_element_by_xpath('//*[@id="billAddress1"]')
-    street.send_keys(street2)
-    zipcode = browser.find_element_by_xpath('//*[@id="billPostalCode"]')
-    zipcode.send_keys(zipcode2)
-    city = browser.find_element_by_xpath('//*[@id="billCity"]')
-    city.send_keys(city2)
-    city = browser.find_element_by_xpath('//*[@id="billState"]/option[10]')
-    city.click()
-    phone = browser.find_element_by_xpath('//*[@id="billHomePhone"]')
-    phone.send_keys(phone2)
-    email = browser.find_element_by_xpath('//*[@id="billEmailAddress"]')
-    email.send_keys(email2)
-    email.submit()
+    street_elem = browser.find_element_by_xpath('//*[@id="billAddress1"]')
+    street_elem.send_keys(street)
+    zipcode_elem = browser.find_element_by_xpath('//*[@id="billPostalCode"]')
+    zipcode_elem.send_keys(zipcode)
+    city_elem = browser.find_element_by_xpath('//*[@id="billCity"]')
+    city_elem.send_keys(city)
+    state_elem = browser.find_element_by_xpath('//*[@id="billState"]/option[' + state_code +  ']')
+    state_elem.click()
+    phone_elem = browser.find_element_by_xpath('//*[@id="billHomePhone"]')
+    phone_elem.send_keys(phone)
+    email_elem = browser.find_element_by_xpath('//*[@id="billEmailAddress"]')
+    email_elem.send_keys(email)
+    email_elem.submit()
     print('Successful!')
     print('Skipping delivery options')
     next_step = browser.find_element_by_xpath('//*[@id="billPaneContinue"]')
@@ -139,14 +127,14 @@ if credit_info_loaded == True:
     time.sleep(1)
     print('Filling out credit card information')
     credit_card_number = browser.find_element_by_xpath('//*[@id="CardNumber"]')
-    credit_card_number.send_keys(creditcardnumber)
+    credit_card_number.send_keys(ccnumber)
     credit_card_number_month = browser.find_element_by_xpath('//*[@id="CardExpireDateMM"]')
-    credit_card_number_month.send_keys(creditcardmonth)
+    credit_card_number_month.send_keys(ccmonth)
     credit_card_number_year = browser.find_element_by_xpath('//*[@id="CardExpireDateYY"]')
-    credit_card_number_year.send_keys(creditcardyear)
+    credit_card_number_year.send_keys(ccyear)
     time.sleep(1)
     print('Filling out csv')
     credit_card_number_csv = browser.find_element_by_xpath('//*[@id="CardCCV"]')
-    credit_card_number_csv.send_keys(credticardcsv)
+    credit_card_number_csv.send_keys(cccsv)
     credit_card_number_csv.submit()
     print('Successful')
