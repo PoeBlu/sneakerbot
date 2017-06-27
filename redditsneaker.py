@@ -17,8 +17,25 @@ shipping_info_loaded = False
 credit_info_loaded = False
 successful_load = False
 
-browser = webdriver.Firefox()
 size_formatted = str(size).zfill(2)
+
+profile = webdriver.FirefoxProfile()
+PROXY_HOST = '45.40.143.57'
+PROXY_PORT = '80'
+#####
+# FIXME: Proxy stuff here seems to not work on footlocker website
+#####
+# profile.set_preference("network.proxy.http",PROXY_HOST)
+# profile.set_preference("network.proxy.http_port",int(PROXY_PORT))
+# profile.set_preference("network.proxy.ssl",PROXY_HOST)
+# profile.set_preference("network.proxy.ssl_port",int(PROXY_PORT))
+# profile.set_preference("network.proxy.ftp",PROXY_HOST)
+# profile.set_preference("network.proxy.ftp_port",int(PROXY_PORT))
+# profile.set_preference("network.proxy.socks",PROXY_HOST)
+# profile.set_preference("network.proxy.socks_port",int(PROXY_PORT))
+# profile.set_preference("network.proxy.type", 1)
+profile.update_preferences()
+browser = webdriver.Firefox(firefox_profile=profile)
 print('Loading page...')
 while successful_load == False:
     browser.get(url)
